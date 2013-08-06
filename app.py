@@ -15,7 +15,8 @@ def index():
 	d3 = url_for('static', filename='js/d3.v3.min.js')
 	bootstrapjs = url_for('static', filename='js/bootstrap.min.js')
 	bootstrapcss = url_for('static', filename='css/bootstrap.min.css')
-	return render_template("index.html", d3=d3, bootstrapjs=bootstrapjs, bootstrapcss=bootstrapcss)
+	qr = url_for('static', filename='img/qrcode.png')
+	return render_template("index.html", d3=d3, bootstrapjs=bootstrapjs, bootstrapcss=bootstrapcss, qr=qr)
 
 if __name__ == "__main__":
 	app.run(debug=True)
