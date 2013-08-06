@@ -27,3 +27,19 @@ def load_data():
 	json_data[x][6] = "NASDAQ-100 Points"
 	"""
 	return json_data
+
+def format_json(json_data):
+	output = {'children' : []}
+	for item in json_data:
+		output['children'].append(
+			{
+				'symbol' : item[0],
+				'name' : item[1],
+				'price' : item[2],
+				'change_d' : item[3],
+				'change_p' : item[4],
+				'volume' : item[5],
+				'value' : item[4]
+			}
+		)
+	return json.dumps(output)

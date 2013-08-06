@@ -1,8 +1,66 @@
 <!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
 <head>
   <title>Stock Bubbles</title>
+  <style>
+  text {
+    font: 10px sans-serif;
+  }
+  svg {
+    margin-top:-90px;
+  }
+  </style>
 </head>
-<body>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-</body>
+<body onload="drawGraph();">
+  <div class="row">
+    <div class="col-4 jumbotron">
+      <h2>NASDAQ-100 Stock Graph</h2>
+      <p class="lead">This is a bubble graph of the NASDAQ-100 stock market index. The bubble sizes indicate today's relative percentage change in each company's stock value (bigger bubbles are better, smaller bubbles are worse).</p>
+      <p class="lead">This graph updates every 15 minutes.</p>
+      <p><small>Built with Python and Javascript, using Flask, BeautifulSoup, D3.js, and Twitter Bootstrap.</small></p>
+    </div>
+    <div class="col-8" id="graph"></div>
+  </div>
+  <script src="{{ d3 }}"></script>
+  <script src="{{ bootstrapjs }}"></script>
+  <link href="{{ bootstrapcss }}" rel="stylesheet" media="screen" />
+  <script>
+  function drawGraph() {
+    var diameter = 860,
+      format = d3.format(",d"),
+      color = d3.scale.category20c();
+
+    var bubble = d3.layout.pack()
+      .sort(null)
+      .size([diameter, diameter])
+      .padding(1.5)
+      .radius(function(d) { return 20 + (1 + (d * 7)); });
+
+    var svg = d3.select("#graph").append("svg")
+      .attr("width", diameter)
+      .attr("height", diameter)
+      .attr("class", "bubble");
   
+    d3.json("/data.json", function(error, quotes) {
+      var node = svg.selectAll('.node')
+      .data(bubble.nodes(quotes)
+      .filter(function(d) { return !d.children; }))
+      .enter().append('g')
+      .attr('class', 'node')
+      .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'});
+    
+      node.append('circle')
+        .attr('r', function(d) { return d.r; })
+        .style('fill', function(d) { return color(d.symbol); });
+    
+      node.append('text')
+        .attr("dy", ".3em")
+        .style('text-anchor', 'middle')
+        .text(function(d) { return d.symbol; });
+    });
+  }
+  setInterval(drawGraph, 900000);
+  </script>
+</body>
+</html>
