@@ -3,8 +3,15 @@
 from bs4 import BeautifulSoup
 import urllib2
 import json
+import re
 
 URL = "http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx"
+
+def fix_numbers(matchobj):
+	prefix = ''
+	if matchobj.group(1) == '-':
+		prefix = '-'
+	return " " + prefix + "0" + matchobj.group(2)
 
 def load_data():
 	# get the page content
@@ -15,6 +22,7 @@ def load_data():
 	scripts = soup.find_all('script')
 	target = scripts[14]
 	json_string = target.text.split('=')[1][:-9]
+	json_string = re.sub('\s(-*)(\.\d)', fix_numbers, json_string)
 	json_data = json.loads(json_string)
 
 	"""
