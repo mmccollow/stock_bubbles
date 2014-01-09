@@ -20,7 +20,7 @@ def load_data():
 
 	# extract the JSON data
 	scripts = soup.find_all('script')
-	target = scripts[14]
+	target = scripts[16]
 	json_string = target.text.split('=')[1][:-9]
 	json_string = re.sub('\s(-*)(\.\d)', fix_numbers, json_string)
 	json_data = json.loads(json_string)
