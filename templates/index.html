@@ -31,12 +31,13 @@
     var diameter = 960,
       format = d3.format(",d"),
       color = d3.scale.category20c();
+			rSize = d3.scale.pow().domain([-100,100]).range([-50,50]);
 
     var bubble = d3.layout.pack()
       .sort(null)
       .size([diameter, diameter])
       .padding(1.5)
-      .radius(function(d) { return 20 + (1 + (d * 7)); });
+      .radius(function(d) { return 20 + (rSize(d) * 30); });
 
     var svg = d3.select("#graph").append("svg")
       .attr("width", diameter)

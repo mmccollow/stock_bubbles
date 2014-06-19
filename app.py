@@ -2,13 +2,13 @@
 
 from flask import Flask
 from flask import render_template, url_for
-from scrape import load_data, format_json
+from nd_csv import get_stocks_data
 
 app = Flask(__name__)
 
 @app.route("/data.json")
 def data_json():
-	return format_json(load_data())
+	return get_stocks_data()
 
 @app.route("/")
 def index():
